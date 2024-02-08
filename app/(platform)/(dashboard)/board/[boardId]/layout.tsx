@@ -1,32 +1,32 @@
-import { auth } from "@clerk/nextjs";
-import { notFound, redirect } from "next/navigation";
+import { auth } from '@clerk/nextjs';
+import { notFound, redirect } from 'next/navigation';
 
-import { db } from "@/lib/db";
+import { db } from '@/lib/db';
 
-import { BoardNavbar } from "./_components/board-navbar";
+import { BoardNavbar } from './_components/board-navbar';
 
-export async function generateMetadata({ 
-  params
- }: {
-  params: { boardId: string; };
- }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { boardId: string };
+}) {
   const { orgId } = auth();
 
   if (!orgId) {
     return {
-      title: "Board",
+      title: 'Board',
     };
   }
 
   const board = await db.board.findUnique({
     where: {
       id: params.boardId,
-      orgId
-    }
+      orgId,
+    },
   });
 
   return {
-    title: board?.title || "Board",
+    title: board?.title || 'Board',
   };
 }
 
@@ -35,12 +35,12 @@ const BoardIdLayout = async ({
   params,
 }: {
   children: React.ReactNode;
-  params: { boardId: string; };
+  params: { boardId: string };
 }) => {
   const { orgId } = auth();
 
   if (!orgId) {
-    redirect("/select-org");
+    redirect('/select-org');
   }
 
   const board = await db.board.findUnique({
@@ -57,7 +57,9 @@ const BoardIdLayout = async ({
   return (
     <div
       className="relative h-full bg-no-repeat bg-cover bg-center"
-      style={{ backgroundImage: `url(${board.imageFullUrl})` }}
+      style={{
+        backgroundImage: `url(${board.imageFullUrl})`,
+      }}
     >
       <BoardNavbar data={board} />
       <div className="absolute inset-0 bg-black/10" />
